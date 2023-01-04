@@ -26,6 +26,9 @@
                                     value="{{ mt_rand(500, 100000) / 100 }}"
                                     required
                                 >
+                                <small class="form-text text-muted">
+                                    Use values with up to two decimal positions, using a dot.
+                                </small>
                             </div>
                             <div class="col-auto">
                                 <label for="currency">Currency</label>
@@ -40,6 +43,50 @@
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <label>
+                                    Select the desired payment platform
+                                </label>
+                                <div
+                                    class="form-group"
+                                    id="toggler"
+                                >
+                                    <div
+                                        class="btn-group btn-group-toggle"
+                                        role="group"
+                                    >
+                                        @foreach ($paymentPlatforms as $paymentPlatform)
+                                            <label
+                                                class="btn btn-outline-secondary rounded m-2 p-1"
+                                                data-bs-target="#{{ $paymentPlatform->name }}Collapse"
+                                                data-bs-toggle="collapse"
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="payment_platform"
+                                                    value="{{ $paymentPlatform->id }}"
+                                                    required
+                                                >
+                                                <img
+                                                    class="img-thumbnail"
+                                                    src="{{ asset($paymentPlatform->image) }}"
+                                                    alt="Payment platform logo">
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                    @foreach ($paymentPlatforms as $paymentPlatform)
+                                        <div
+                                            id="{{ $paymentPlatform->name }}Collapse"
+                                            class="collapse"
+                                            data-bs-parent="#toggler"
+                                        >
+                                            @includeIf("components." . strtolower($paymentPlatform->name) . "-collapse")
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                         <div class="text-center mt-3">
