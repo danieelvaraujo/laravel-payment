@@ -9,7 +9,7 @@
 
                 <div class="card-body">
                     <form
-                        action="#"
+                        action="{{ route('pay') }}"
                         method="POST"
                         id="paymentForm"
                     >
