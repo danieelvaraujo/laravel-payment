@@ -13,7 +13,7 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-    {{-- Bootstrap --}}
+    {{-- Bootstrap scripts --}}
     <script
         src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
@@ -24,21 +24,22 @@
         integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
         crossorigin="anonymous"
     ></script>
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-        crossorigin="anonymous"
-    >
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"
     ></script>
 
-
-    <!-- Scripts -->
+    <!-- Styles -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+        crossorigin="anonymous"
+    >
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+    @stack('styles')
 </head>
 <body>
     <div id="app">
@@ -99,8 +100,34 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+            <div class="container">
+                @if (isset($errors) && $errors->any())
+                    <div class="alert alert-danger" role="alert">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                @if (session()->has('success'))
+                    <div class="alert alert-success" role="alert">
+                        <ul>
+                            @foreach (session()->get('success') as $message)
+                                <li>{{ $message }}</li>
+                            @endforeach
+                        </ul>
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                @yield('content')
+            </div>
         </main>
     </div>
+
+    @stack('scripts')
 </body>
 </html>
