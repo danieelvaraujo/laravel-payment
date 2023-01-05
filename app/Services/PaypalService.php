@@ -21,11 +21,18 @@ class PaypalService
 
     public function resolveAuthorization(&$queryParams, &$formParams, &$headers)
     {
-        //
+        $headers['Authorization'] = $this->resolveAccessToken();
     }
 
     public function decodeResponse($response)
     {
         //
+    }
+
+    public function resolveAccessToken()
+    {
+        $credentials = base64_encode("{$this->clientId}:{$this->clientSecret}");
+        
+        return "Basic {$credentials}";
     }
 }
