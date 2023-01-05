@@ -26,7 +26,7 @@ class PaypalService
 
     public function decodeResponse($response)
     {
-        //
+        return json_decode($response);
     }
 
     public function resolveAccessToken()
@@ -40,7 +40,7 @@ class PaypalService
     {
         return $this->makeRequest(
             'POST',
-            'v2/checkout/orders',
+            '/v2/checkout/orders',
             [],
             [
                 'intent' => 'CAPTURE',
@@ -62,6 +62,19 @@ class PaypalService
             ],
             [],
             $isJsonRequest = true
+        );
+    }
+
+    public function capturePayment($approvalId)
+    {
+        return $this->makeRequest(
+            'POST',
+            "/v2/checkout/orders/{$approvalId}/capture",
+            [],
+            [],
+            [
+                'Content-Type' => 'application/json'
+            ]
         );
     }
 }
