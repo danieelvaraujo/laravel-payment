@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PaypalService;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -30,8 +31,9 @@ class PaymentController extends Controller
         ];
 
         $request->validate($rules);
-
-        return $request->all();
+        $paymentPlatform = resolve(PaypalService::class);
+        
+        return $paymentPlatform->handlePayment($request);
     }
 
     public function approval()
