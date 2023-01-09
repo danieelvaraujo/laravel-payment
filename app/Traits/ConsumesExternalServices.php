@@ -28,10 +28,12 @@ trait ConsumesExternalServices
             'headers' => $headers,
             'query' => $queryParams
         ]);
-
-        $response->getBody()->getContents();
-        $response = $this->decodeResponse($response);
-
+        
+        $response = $response->getBody()->getContents();
+        if (method_exists($this, 'decodeResponse')) {
+            $response = $this->decodeResponse($response);
+        }
+        
         return $response;
     }
 }
