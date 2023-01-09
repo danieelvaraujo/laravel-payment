@@ -32,13 +32,15 @@ class PaymentController extends Controller
 
         $request->validate($rules);
         $paymentPlatform = resolve(PaypalService::class);
-        
+
         return $paymentPlatform->handlePayment($request);
     }
 
     public function approval()
     {
-
+        $paymentPlatform = resolve(PaypalService::class);
+        
+        return $paymentPlatform->handleApproval();
     }
 
     public function caceled()
