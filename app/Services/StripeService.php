@@ -44,7 +44,7 @@ class StripeService
         $intent = $this->createIntent(
             $request->value,
             $request->currency,
-            $request->paymentMethod
+            $request->payment_method
         );
 
         session()->put('paymentIntentId', $intent->id);
@@ -54,7 +54,23 @@ class StripeService
 
     public function handleApproval()
     {
-        //
+        if (session()->has('paymentIntentId')) {
+            $paymentIntentId = session()->get('paymentIntentId');
+            $confirmation = $this->confirmPayment($paymentIntentId);
+
+            if ($confirmation->status === 'succeeded') {
+                $currency = strtoupper($confirmation->currency);
+                $amount = $confirmation->amount / $this->resolveFactor($currency);
+
+                return redirect()
+                    ->route('home')
+                    ->withSuccess(['payment' => "Thanks. We received your {$currency}{$amount} payment."]);
+            }
+        }
+
+        return redirect()
+            ->route('home')
+            ->withErrors('We could not capture your payment. Please try again.');
     }
 
     public function createIntent($value, $currency, $paymentMethod)

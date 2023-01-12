@@ -1,3 +1,4 @@
+{{-- CSS --}}
 @push('styles')
 <style type="text/css">
     .StripeElement {
@@ -26,6 +27,7 @@
 </style>
 @endpush
 
+{{-- HTML --}}
 <label for="card-element" class="mt-3">
     Card details:
 </label>
@@ -34,6 +36,7 @@
 <small class="form-text text-muted" id="cardErrors" role="alert"></small>
 <input type="hidden" name="payment_method" id="paymentMethod">
 
+{{-- SCRIPTS --}}
 @push('scripts')
 <script src="https://js.stripe.com/v3/"></script>
 <script>
