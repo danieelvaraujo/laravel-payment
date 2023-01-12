@@ -89,6 +89,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-auto">
+                                    @if (!optional(auth()->user())->hasActiveSubscription())
+                                        <p class="border-bottom border-primary pb-1">
+                                            Would you like a discount for every purchase? <a href="#">Subscribe</a>
+                                        </p>
+                                    @else
+                                        <p class="border-bottom border-primary pb-1 mb-0">
+                                            You get <span class="fw-bold">10% discount</span> for every purchase as part of your subscription.
+                                        </p>
+                                        <p style="font-size: 14px" class="text-muted">
+                                            (It will be applied in the checkout)
+                                        </p>
+                                    @endif
+                            </div>
+                        </div>
                         <div class="text-center mt-3">
                             <button
                                 class="btn btn-primary btn-lg"
