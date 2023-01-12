@@ -108,6 +108,33 @@ class PaypalService
         );
     }
 
+    public function createSubscription($slug, $name, $email)
+    {
+        return $this->makeRequest(
+            'POST',
+            '/v1/billing/subscriptions',
+            [],
+            [
+                'plan_id' => $this->plans[$slug],
+                'subscriber' => [
+                    'name' => [
+                        'given_name' => $name,
+                    ],
+                    'email_addres' => $email
+                ],
+                'application_context' => [
+                    'brand_name' => config('app.name'),
+                    'shipping_preference' => 'NO_SHIPPING',
+                    'user_action' => 'SUBSCRIBE_NOW',
+                    'return_url' => route('subscribe.approval', ['plan' => $slug]),
+                    'cancel_url' => route('subscribe.canceled'),
+                ]
+            ],
+            [],
+            $isJsonRequest = true
+        );
+    }
+
     public function capturePayment($approvalId)
     {
         return $this->makeRequest(
