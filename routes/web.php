@@ -31,8 +31,8 @@ Route::get('/payments/canceled', [App\Http\Controllers\PaymentController::class,
 Route::prefix('subscribe')
     ->name('subscribe.')
     ->group(function () {
-        Route::get('/', SubscriptionController::class, 'show')->name('show');
-        Route::post('/', SubscriptionController::class, 'store')->name('store');
-        Route::get('/approval', SubscriptionController::class, 'approval')->name('approval');
-        Route::get('/canceled', SubscriptionController::class, 'canceled')->name('canceled');
+        Route::get('/', [App\Http\Controllers\SubscriptionController::class, 'show'])->name('show');
+        Route::post('/', [App\Http\Controllers\SubscriptionController::class, 'store'])->name('store');
+        Route::get('/approval', [App\Http\Controllers\SubscriptionController::class, 'approval'])->name('approval');
+        Route::get('/canceled', [App\Http\Controllers\SubscriptionController::class, 'canceled'])->name('canceled');
 });
