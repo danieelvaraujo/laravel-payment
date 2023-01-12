@@ -57,7 +57,7 @@
                     <ul class="navbar-nav me-auto">
                         @if (!optional(auth()->user())->hasActiveSubscription())
                             <li class="nav-item">
-                                <a class="btn btn-outline-secondary" href="#">Subscribe</a>
+                                <a class="btn btn-outline-secondary" href="{{ route('subscribe.show') }}">Subscribe</a>
                             </li>
                         @endif
                         <li class="nav-item">

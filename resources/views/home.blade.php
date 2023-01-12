@@ -93,7 +93,8 @@
                             <div class="col-auto">
                                     @if (!optional(auth()->user())->hasActiveSubscription())
                                         <p class="border-bottom border-primary pb-1">
-                                            Would you like a discount for every purchase? <a href="#">Subscribe</a>
+                                            Would you like a discount for every purchase? 
+                                            <a href="{{ route('subscribe.show') }}">Subscribe</a>
                                         </p>
                                     @else
                                         <p class="border-bottom border-primary pb-1 mb-0">
