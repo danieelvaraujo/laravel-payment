@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PaymentPlatform;
 use App\Models\Plan;
+use App\Models\Subscription;
 use App\Resolvers\PaymentPlatformResolver;
 
 use Illuminate\Http\Request;
@@ -42,5 +43,33 @@ class SubscriptionController extends Controller
         session()->put('subscriptionPlatformId', $request->payment_platform);
 
         return $paymentPlatform->handleSubscription($request);
+    }
+
+    public function approval(Request $request)
+    {
+        $rules = ['plan' => ['required', 'exists:plans,slug']];
+        $request->validate($rules);
+
+        $plan = Plan::where('slug', $request->plan)->firstOrFail();
+        $user = $request->user();
+
+        Subscription::create([
+            'active_until' => now()->addDays($plan->duration_in_days),
+            'user_id' => $user->id,
+            'plan_id' => $plan->id
+        ]);
+
+        return redirect()
+            ->route('home')
+            ->withSuccess([
+                'payment' => "Thanks {$user->name}. You have now a {$plan->slug} subscription. Start using it now."
+            ]);
+    }
+
+    public function canceled()
+    {
+        return redirect()
+            ->route('subscribe.show')
+            ->withErrors('Operation canceled.');
     }
 }
