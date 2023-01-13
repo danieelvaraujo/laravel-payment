@@ -168,4 +168,17 @@ class PaypalService
 
         return 100;
     }
+
+    public function validateSubscription(Request $request)
+    {
+        if (session()->get('subscriptionId')) {
+            $subscriptionId = session()->get('subscriptionId');
+
+            session()->forget('subscriptionId');
+
+            return $request->subscription_id == $subscriptionId;
+        }
+
+        return false;
+    }
 }

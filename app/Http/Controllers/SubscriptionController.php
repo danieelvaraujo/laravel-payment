@@ -36,7 +36,6 @@ class SubscriptionController extends Controller
             'plan' => ['required', 'exists:plans,slug'],
             'payment_platform' => ['required', 'exists:payment_platforms,id']
         ];
-
         $request->validate($rules);
 
         $paymentPlatform = $this->paymentPlatformResolver->resolveService($request->payment_platform);
@@ -50,20 +49,31 @@ class SubscriptionController extends Controller
         $rules = ['plan' => ['required', 'exists:plans,slug']];
         $request->validate($rules);
 
-        $plan = Plan::where('slug', $request->plan)->firstOrFail();
-        $user = $request->user();
+        if (session()->has('subscriptionPlatformId')) {
+            $paymentPlatform = $this->paymentPlatformResolver
+                ->resolveService(session()->get('subscriptionPlatformId'));
 
-        Subscription::create([
-            'active_until' => now()->addDays($plan->duration_in_days),
-            'user_id' => $user->id,
-            'plan_id' => $plan->id
-        ]);
+                if ($paymentPlatform->validateSubscription($request)) {
+                    $plan = Plan::where('slug', $request->plan)->firstOrFail();
+                    $user = $request->user();
+            
+                    Subscription::create([
+                        'active_until' => now()->addDays($plan->duration_in_days),
+                        'user_id' => $user->id,
+                        'plan_id' => $plan->id
+                    ]);
+            
+                    return redirect()
+                        ->route('home')
+                        ->withSuccess([
+                            'payment' => "Thanks {$user->name}. You have now a {$plan->slug} subscription. Start using it now."
+                        ]);
+                }
+        }
 
         return redirect()
-            ->route('home')
-            ->withSuccess([
-                'payment' => "Thanks {$user->name}. You have now a {$plan->slug} subscription. Start using it now."
-            ]);
+            ->route('subscribe.show')
+            ->withErrors('We could not validate your subscription. Please try again.');        
     }
 
     public function canceled()
